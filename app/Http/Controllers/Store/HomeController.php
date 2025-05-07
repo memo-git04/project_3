@@ -5,16 +5,51 @@ namespace App\Http\Controllers\Store;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Color;
+use App\Models\Material;
+use App\Models\Origin;
 use App\Models\Product;
 use App\Models\Product_variant;
 use App\Models\Size;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index( Request $request)
     {
+//        $minutes = 60;
+//        $response = new Response('Set Cookie');
+//        $response->withCookie(cookie('cart', [], $minutes));
+
+//        $value = unserialize($request->cookie('cart'));
+
         return view('shop.content.index');
+    }
+
+    public function productDetail(Product $product){
+        //get categories, brands, materials, origins from database
+        $categories = Category::all();
+        $brands = Brand::all();
+        $materials = Material::all();
+        $origins = Origin::all();
+        //get colors, sizes, images from database
+        $colors = Color::all();
+        $sizes = \App\Models\Size::all();
+
+        //get product_variant from database
+        $variants = $product->productVariants()->with(['color', 'size', 'images'])->get();
+
+        return view('shop.content.product-details', [
+            'product' => $product,
+            'categories' => $categories,
+            'brands' => $brands,
+            'materials' => $materials,
+            'origins' => $origins,
+            'colors' => $colors,
+            'sizes' => $sizes,
+            'variants' => $variants,
+        ]);
     }
 
 
@@ -37,7 +72,13 @@ class HomeController extends Controller
             'variants' => $variants,
         ]);
     }
-    public function cart(){
-        return view('shop.content.cart');
+    public function cart(Request $request){
+//        $value = unserialize($request->cookie('cart'));
+        $value= $request->session()->get('cart');
+        return view('shop.content.cart', [
+            'cart' => $value,
+        ]);
+
     }
+
 }

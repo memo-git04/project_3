@@ -5,7 +5,7 @@
 
 <!--shop  area start-->
     <div class="shop_section shop_reverse">
-        <div class="container">
+        <div class="container" style="margin-top: 100px">
             <div class="row">
                 <div class="col-lg-3 col-md-12">
                    <!--sidebar widget start-->
@@ -152,13 +152,13 @@
                     </div>
                      <!--shop toolbar end-->
                      <div class="row shop_wrapper">
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-6 ">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
                             @foreach($variants as $variant)
                                 <div class="single_product">
                                     <div class="product_thumb">
                                         @foreach($variant->images as $image)
                                            @if($image->is_primary == 1)
-                                                <a href="" >
+                                                <a href="{{route('products.products-detail', $variant->product->id)}}" >
                                                     <img class="primary_img" src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="consectetur">
                                                 </a>
                                             @endif
@@ -194,7 +194,7 @@
                                             <span class="old_price">{{$variant->price}}</span>
                                         </div>
                                         <div class="add_to_cart">
-                                            <a class="btn btn-primary" href="#" data-tippy="Add To Cart"  data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="top">Add To Cart</a>
+                                            <a class="btn btn-primary" href="{{route('products.add-to-cart', $variant->product->id)}}" data-tippy="Add To Cart"  data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="top">Add To Cart</a>
                                         </div>
                                     </div>
                                     <div class="product_list_content">
@@ -208,8 +208,10 @@
                                             <p>{{$variant->product->description}}</p>
                                         </div>
                                         <div class="add_to_cart">
-                                            <a class="btn btn-primary" href="#" data-tippy="Add To Cart"  data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="top">Add To Cart</a>
-
+                                            <a class="btn btn-primary" href="{{route('products.add-to-cart', $variant->product->id)}}" data-tippy="Add To Cart"
+                                               data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="top">
+                                                Add To Cart
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

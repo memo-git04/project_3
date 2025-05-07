@@ -3,15 +3,12 @@
 
 @section('content')
       <!--breadcrumbs area start-->
-    <div class="breadcrumbs_area breadcrumbs_other">
+    <div class="breadcrumbs_area breadcrumbs_other" style="margin-top: 50px">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="breadcrumb_content text-center">
-                        <ul>
-                            <li><a href="index.html">home</a></li>
-                            <li><a href="#">pages</a></li>
-                        </ul>
+
                         <h3>Shopping Cart</h3>
                     </div>
                 </div>
@@ -19,11 +16,17 @@
         </div>
     </div>
     <!--breadcrumbs area end-->
-
+     <div class="text-center text-2xl">
+         @if (!session()->has('cart') || count(session('cart')) == 0)
+             <h3 class="text-success" style="margin-bottom: 200px">Your cart is empty. <a href="{{ route('shop') }}"><button>Continue shopping</button></a>.</h3>
+         @else
+     </div>
      <!--shopping cart area start -->
     <div class="shopping_cart_area">
         <div class="container">
-            <form action="#">
+            <form action="{{route('products.update_cart')}}" method="post">
+                @method('PUT')
+            @csrf
                 <div class="cart_page_inner mb-60">
                     <div class="row">
                         <div class="col-12">
@@ -39,90 +42,62 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <div class="hidden">{{$total = 0}}</div>
+                                    @foreach($cart as $item)
+{{--                                        {{dd($item)}}--}}
+
                                         <tr class="border-top">
                                             <td>
                                                 <div class="cart_product_thumb">
-                                                    <img src="assets/img/product/product4.jpg" alt="">
+                                                    <img src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $item['image']) }}" alt="">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="cart_product_text">
-                                                    <h4>Example With Title Product</h4>
+                                                    <h4>{{$item['name']}}</h4>
                                                     <ul>
-                                                        <li><i class="ion-ios-arrow-right"></i> Color : <span>White</span></li>
-                                                        <li><i class="ion-ios-arrow-right"></i> Size : <span>XL</span></li>
+                                                        <li><i class="ion-ios-arrow-right"></i> Color : <span>{{$item['color_name']}}</span></li>
+                                                        <li><i class="ion-ios-arrow-right"></i> Size : <span>{{$item['size_name']}}</span></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="cart_product_price">
-                                                    <span>$45.05</span>
+                                                    <span >{{$item['price']}}</span>
                                                 </div>
                                             </td>
                                             <td class="product_quantity">
                                                 <div class="cart_product_quantity">
-                                                    <input min="1" max="100" value="1" type="number">
+                                                    <input min="1" max="100" value="{{$item['quantity']}}" type="number" name="quantity[{{$item['product_id']}}]">
+
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="cart_product_price">
-                                                    <span>$45.05</span>
+                                                    <span>{{$item['price'] * $item['quantity']}}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="cart_product_remove text-right">
-                                                    <a href="#"><i class="ion-android-close"></i></a>
+                                                    <a href="{{route('products.remove_a_product', $item['product_id'])}}"><i class="ion-android-close"></i></a>
                                                 </div>
                                             </td>
 
                                         </tr>
-                                        <tr class="border-top">
-                                            <td>
-                                                <div class="cart_product_thumb">
-                                                    <img src="assets/img/product/product6.jpg" alt="">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="cart_product_text">
-                                                    <h4>Example With Title Product</h4>
-                                                    <ul>
-                                                        <li><i class="ion-ios-arrow-right"></i> Color : <span>White</span></li>
-                                                        <li><i class="ion-ios-arrow-right"></i> Size : <span>XL</span></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="cart_product_price">
-                                                    <span>$45.05</span>
-                                                </div>
-                                            </td>
-                                            <td class="product_quantity">
-                                                <div class="cart_product_quantity">
-                                                    <input min="1" max="100" value="1" type="number">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="cart_product_price">
-                                                    <span>$45.05</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="cart_product_remove text-right">
-                                                    <a href="#"><i class="ion-android-close"></i></a>
-                                                </div>
-                                            </td>
+                                        <div class="hidden">{{$total += $item['price'] * $item['quantity']}}</div>
 
-                                        </tr>
+                                    @endforeach
+
                                     </tbody>
                                 </table>
                             </div>
                             <div class="cart_page_button border-top d-flex justify-content-between">
                                 <div class="shopping_cart_btn">
-                                    <a href="#" class="btn btn-primary border">CLEAR SHOPPING CART</a>
+                                    <a href="{{route('products.remove_cart')}}" class="btn btn-primary border">CLEAR SHOPPING CART</a>
                                     <button class="btn btn-primary border" type="submit">UPDATE YOUR CART</button>
                                 </div>
                                 <div class="shopping_continue_btn">
-                                    <button class="btn btn-primary" type="submit">CONTINUE SHOPPING</button>
+                                    <a class="btn btn-primary" href="{{route('shop')}}">CONTINUE SHOPPING</a>
                                 </div>
                             </div>
                          </div>
@@ -132,19 +107,7 @@
                 <div class="cart_page_bottom">
                     <div class="row">
                         <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="shopping_coupon_calculate top">
-                                <h3 class="border-bottom">Calculate Shipping </h3>
-                                <select class="select_option border">
-                                    <option value="1">United Kingdom (UK)  </option>
-                                    <option value="2">Åland Islands  </option>
-                                    <option value="3">Afghanistan  </option>
-                                    <option value="4">Belgium </option>
-                                    <option value="5">Albania  </option>
-                                </select>
-                                <input class="border" placeholder="State / Country" type="text">
-                                <input class="border" placeholder="Postcode / Zip" type="text">
-                                <button class="btn btn-primary" type="submit">get a quote</button>
-                            </div>
+
                         </div>
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="shopping_coupon_calculate">
@@ -159,7 +122,7 @@
                                <div class="grand_totall_inner border-bottom">
                                    <div class="cart_subtotal d-flex justify-content-between">
                                        <p>sub total </p>
-                                       <span>$126.00</span>
+                                       <span>{{$total}}</span>
                                    </div>
                                    <div class="cart_grandtotal d-flex justify-content-between">
                                        <p>grand total</p>
@@ -167,9 +130,9 @@
                                    </div>
                                </div>
                                <div class="proceed_checkout_btn">
-                                   <a class="btn btn-primary" href="#">Proceed to Checkout</a>
+                                   <a class="btn btn-primary" href="{{route('checkout')}}">Proceed to Checkout</a>
                                </div>
-                               <a href="#">Checkout with Mutilple Adresses</a>
+
                             </div>
                         </div>
                     </div>
@@ -179,5 +142,6 @@
         </div>
     </div>
      <!--shopping cart area end -->
+        @endif
 
 @endsection

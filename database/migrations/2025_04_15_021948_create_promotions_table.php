@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('min_order_amount', 8, 2)->nullable(); // Minimum order amount to apply the promotion4
             $table->date('start_date'); // Start date of the promotion
             $table->date('end_date'); // End date of the promotion
-            $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('cascade'); // Foreign key to customers table
             $table->boolean('is_used')->default(0); // 1: used, 0: not used
             $table->boolean('is_deleted')->default(0); // 1: deleted, 0: not deleted
             $table->timestamps();

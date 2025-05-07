@@ -8,14 +8,59 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-// Route::get('/', function () {
-//     return bcrypt('789456');
+// Route::get('/code', function () {
+//     return bcrypt('168108');
 // });
 
+
+
 Route::get('/', [HomeAdminController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/login-page', [\App\Http\Controllers\CustomerController::class, 'customerLogin'])
+    ->name('customerLogin');
+Route::post('/login-page', [\App\Http\Controllers\CustomerController::class, 'loginCustomerProcess'])
+    ->name('loginCustomerProcess');
+Route::get('/logout-page', [\App\Http\Controllers\CustomerController::class, 'logoutCustomer'])
+    ->name('logoutCustomer');
+
+Route::get('/register', [\App\Http\Controllers\CustomerController::class, 'register'])
+    ->name('register');
+Route::post('/register', [\App\Http\Controllers\CustomerController::class, 'registerProcess'])
+    ->name('registerProcess');
+
+Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])
+    ->name('checkout');
+Route::post('/checkout', [\App\Http\Controllers\OrderController::class, 'store'])
+    ->name('storeCheckout');
+Route::get('/checkout/success', [\App\Http\Controllers\OrderController::class, 'successCheckout'])
+    ->name('successCheckout');
+
+Route::get('/order-history', [\App\Http\Controllers\OrderController::class, 'orderHistory'])
+    ->name('orderHistory');
+Route::get('/order-history/{order}', [\App\Http\Controllers\OrderController::class, 'orderDetail'])
+    ->name('orderDetail');
+Route::post('/order-history/{order}', [\App\Http\Controllers\OrderController::class, 'cancelOrder'])
+    ->name('order.cancel');
+
+Route::get('/orders/filter', [\App\Http\Controllers\OrderController::class, 'filterOrders'])
+    ->name('orders.filter');
+
+Route::get('/home', [HomeController::class, 'index'])->name('homePage');
 Route::get('/shop', [HomeController::class,'shop'])->name('shop');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
+
+
+Route::get('/shop/product-detail/{product}', [HomeController::class, 'productDetail'])
+    ->name('products.products-detail');
+Route::get('/add-to-cart/{product}', [\App\Http\Controllers\ProductController::class, 'addToCart'])
+    ->name('products.add-to-cart');
+Route::put('/add-to-cart', [\App\Http\Controllers\ProductController::class, 'updateCart'])
+    ->name('products.update_cart');
+Route::get('/remove-cart/{product}', [\App\Http\Controllers\ProductController::class, 'removeProduct'])
+    ->name('products.remove_a_product');
+Route::get('/remove-cart', [\App\Http\Controllers\ProductController::class, 'deleteAllProducts'])
+    ->name('products.remove_cart');
+
 
 
 
@@ -171,7 +216,14 @@ Route::middleware('adminLoginMiddleware')->prefix('admin')->group(function () {
             ->name('products.destroy');
         Route::get('/show/{product}', [\App\Http\Controllers\ProductController::class, 'show'])
             ->name('products.show');
+
     });
 
+    Route::prefix('/orders')->group(function (){
+        Route::get('/',[HomeAdminController::class, 'orderManage'])
+            ->name('orders');
+        Route::get('/order-item',[HomeAdminController::class, 'orderItem'])
+            ->name('orders.item');
+    });
 
 });

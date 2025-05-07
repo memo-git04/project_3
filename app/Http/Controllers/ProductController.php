@@ -13,7 +13,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product_variant;
 use Illuminate\Support\Facades\Redirect;
-
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     /**
@@ -83,15 +84,17 @@ class ProductController extends Controller
                 ]);
                 // Handle image uploads for this product variant
                 if ($request->hasFile('images')) {
+//                    $imageName = $request->file('images')->getClientOriginalName();
                     foreach ($request->file('images') as $imageFile) {
                         // Store image in storage/public/images
+
                         $filePath = $imageFile->store('images', 'public');
 
                         // Save image details in the images table
                         $img = Image::create([
                             'product_variant_id' => $productVariant->id,
-                            'url' => $filePath,
-                            'is_primary' => false, // Set to true if this is a primary image
+                            'url' => substr($filePath, 7),
+                            'is_primary' => true, // Set to true if this is a primary image
                             'is_deleted' => false,
                         ]);
 //                        dd($img);
@@ -246,4 +249,116 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully');
     }
+
+    public function addToCart(Product $product, Image $image, Request $request){
+        // Add product to cart logic here
+        // You can use session or database to store the cart items
+
+//        $cart = [];
+//        if (!empty($request->cookie('cart'))){
+//            $cart = unserialize($request->cookie('cart'));;
+//        }
+//        // check if the product is already in the cart
+//        if(isset($cart[$product->id])) {
+//            $cart[$product->id]['quantity']++;
+//        }
+//        else {
+////            dd($product->productVariants);
+//            $url = $image->where('product_variant_id', $product->productVariants[0]['id'])->first();
+//            $variant = $product->productVariants[0];
+//
+//            $cart[$product->id] = [
+//                "product_id" =>$product->id,
+//                "name" => $product->product_name,
+//                "quantity" => 1,
+//                "price" => $product->base_price,
+//                "image" => $url->url,
+//                'color_name' =>$variant->color->color_name,
+//                'size_name' => $variant->size->size_name,
+//            ];
+//        }
+//        // Save the cart back to the session
+////        cookie()->put('cart', $cart);
+////        Cookie::queue('cart', $cart, 60 * 24 * 7); // Store for 7 days
+////        dd($cart);
+//
+//        $cookie = cookie('cart', serialize($cart), 60 * 24 * 7); // Store for 7 days
+//
+//        return redirect()->route('cart')->cookie($cookie);
+
+        //Nếu cart tồn lại trên session thì lấy về, còn chưa thì tạo 1 mảng mới
+        $cart = session()->get('cart', []);
+
+//        dd($cart);
+        //Kiểm tra trên cart đã có snar phẩm được chọn chưa
+        if(isset($cart[$product->id])){
+            $cart[$product->id]['quantity']++;
+        } else {
+            $url = $image->where('product_variant_id', $product->productVariants[0]['id'])->first();
+            $variant = $product->productVariants[0];
+//            dd($variant);
+            $cart[$product->id] = [
+                "product_id" =>$product->id,
+                "product_variant_id" => $product->productVariants[0]->id,
+                "name" => $product->product_name,
+                "quantity" => 1,
+                "price" => $product->base_price,
+                "image" => $url->url,
+                'color_name' =>$variant->color->color_name,
+                'size_name' => $variant->size->size_name,
+            ];
+        }
+        //Lưu cart lên session
+        session()->put('cart', $cart);
+//        dd($cart);
+        return Redirect::route('cart');
+    }
+    public function updateCart(Request $request)
+    {
+//        // Update cart logic here
+//        $cart = [];
+//        if (!empty($request->cookie('cart'))){
+//            $cart = unserialize($request->cookie('cart'));;
+//            foreach($request->quantity as $key => $value){
+//                $cart[$key]['quantity'] = $value;
+//            }
+//        }
+//        // Update the quantity of the product in the cart
+//
+//
+//        // Save the updated cart back to the session
+//        $cookie = cookie('cart', serialize($cart), 60 * 24 * 7); // Store for 7 days
+//
+//        return redirect()->route('cart')->cookie($cookie);
+
+        //Lấy sản phẩm có id và số lượng muốn cập nhật
+//        dd($request);
+        $products = $request->quantity;
+        //Lấy cart
+        $cart = session()->get('cart', []);
+//        dd($products);
+        foreach ($products as $id => $quantity) {
+//            dd($id);
+            $cart[$id]['quantity'] = $quantity;
+        }
+        session()->put('cart', $cart);
+        return Redirect::route('cart');
+    }
+
+    public function removeProduct(Product $product): \Illuminate\Http\RedirectResponse
+    {
+        //Lấy cart
+        $cart = session()->get('cart', []);
+        unset($cart[$product->id]);
+        session()->put('cart', $cart);
+        return Redirect::route('cart');
+    }
+
+    public function deleteAllProducts(): \Illuminate\Http\RedirectResponse
+    {
+        //Xóa cart
+        session()->forget('cart');
+        return Redirect::route('products.remove_cart');
+    }
+
 }

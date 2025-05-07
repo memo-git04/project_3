@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class CustomerController extends Controller
 {
@@ -63,4 +66,62 @@ class CustomerController extends Controller
     {
         //
     }
+
+    public function register(){
+        return view('shop.login.register');
+    }
+    public function registerProcess(Request $request)
+    {
+        //validate data
+        if($request->password != $request->repeatpass)
+        {
+            return Redirect::back();
+        }
+
+        $customer = Customer::create([
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'fullname' => $request->fullname,
+            'phone' => $request->phone,
+            'address' => $request->address,
+        ]);
+
+//        dd($customer);
+        return Redirect::route('customerLogin',[
+            'customer' => $customer,
+        ]);
+    }
+
+    public function customerLogin()
+    {
+        return view('shop.login.login');
+    }
+    public function loginCustomerProcess(\Illuminate\Http\Request $request)
+    {
+        $accounts = $request->only(['email', 'password']);
+
+        if(Auth::guard('customer')->attempt($accounts))
+        {
+            //get data of customer
+            $customer = Auth::guard('customer')->user();
+            Auth::guard('customer')->login($customer);
+            //data of customer login put in session
+            session(['customer' => $customer]);
+            //redirect to home page
+            return Redirect::route('homePage');
+        }else
+        {
+            return Redirect::back();
+        }
+    }
+    public function logoutCustomer()
+    {
+        Auth::guard('customer')->logout();
+        session()->forget('customer');
+        return Redirect::route('homePage');
+    }
+
+
+
 }

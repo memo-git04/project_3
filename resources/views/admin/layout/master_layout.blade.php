@@ -358,8 +358,8 @@
                         <i class="fa-solid fa-cart-shopping"></i><span class="nav-text">Order Management </span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="">Order management</a></li>
-                        <li><a href="">Order management</a></li>
+                        <li><a href="{{route('orders')}}">Order management</a></li>
+
                     </ul>
                 </li>
 

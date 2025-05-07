@@ -12,6 +12,10 @@
     <link rel="profile" href="https://gmpg.org/xfn/11" />
     <link rel="canonical" href="Replace_with_your_PAGE_URL" />
 
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+            integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Add site Favicon -->
     <link
       rel="icon"
@@ -354,23 +358,38 @@
                 <div class="header_account">
                   <ul class="d-flex">
                     <li class="header_search">
-                      <a href="#"><i class="icon-magnifier icons"></i></a>
+                        <form class="d-flex" id="search" action="" method="get">
+                            <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search" />
+                            <button class="btn btn-outline-success" type="submit">
+                                Search
+                            </button>
+                        </form>
                     </li>
                     <li class="account_link">
-                      <a href="#"><i class="icon-user icons"></i></a>
-                      <ul class="dropdown_account_link">
-                        <li><a href="#">My Account</a></li>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Contact</a></li>
-                      </ul>
+                        @if(session()->has('customer'))
+{{--                            if customer is logged in--}}
+                            <a href="#">{{ session()->get('customer')->fullname }}</a>
+                            <ul class="dropdown_account_link">
+                                <li><a href="#">My Account</a></li>
+                                <li><a href="{{ route('logoutCustomer') }}">Logout</a></li>
+                                <li><a href="{{route('orderHistory')}}">My Order</a></li>
+                            </ul>
+                        @else
+{{--                            if customer is not logged in--}}
+                            <a href="#"><i class="icon-user icons"></i></a>
+                            <ul class="dropdown_account_link">
+                                <li><a href="{{ route('register') }}">Register</a></li>
+                                <li><a href="{{ route('customerLogin') }}">Login</a></li>
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                        @endif
                     </li>
-                    <li>
-                      <a href="#"><i class="icon-heart icons"></i></a>
-                      <span class="item_count">2</span>
-                    </li>
+
                     <li class="shopping_cart">
-                      <a href="#"><i class="icon-basket-loaded icons"></i></a>
-                      <span class="item_count">2</span>
+                      <a href="{{route('cart')}}"><i class="icon-basket-loaded icons"></i></a>
+                      <span class="item_count">
+                           {{ session('cart') ? count(session('cart')) : 0 }}
+                      </span>
                     </li>
                   </ul>
                 </div>
