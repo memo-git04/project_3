@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->boolean('is_active')->default(1); //1: active, 0: inactive
             $table->boolean('is_deleted')->default(0); //1: deleted, 0: not deleted
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->timestamps();

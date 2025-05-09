@@ -335,7 +335,7 @@
                 <div class="main_menu d-none d-lg-block">
                   <nav>
                     <ul class="d-flex">
-                      <li><a class="active" href="{{route('home')}}">home</a></li>
+                      <li><a class="active" href="{{route('homePage')}}">home</a></li>
                       <li><a href="{{route('shop')}}">shop</a></li>
                       <li>
                         <a href="#">pages</a>
@@ -370,7 +370,7 @@
 {{--                            if customer is logged in--}}
                             <a href="#">{{ session()->get('customer')->fullname }}</a>
                             <ul class="dropdown_account_link">
-                                <li><a href="#">My Account</a></li>
+                                <li><a href="{{route('profile')}}">My Account</a></li>
                                 <li><a href="{{ route('logoutCustomer') }}">Logout</a></li>
                                 <li><a href="{{route('orderHistory')}}">My Order</a></li>
                             </ul>
@@ -462,21 +462,21 @@
     <!--newsletter section end-->
 
     <!--footer area start-->
-    <footer class="footer_widgets">
+    <footer class="footer_widgets" style="background-color: #d6eadf">
       <div class="container">
         <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="footer_widget_list">
               <div class="footer_logo">
-                <a href="#"><img src="assets/img/logo/logo.png" alt="" /></a>
+                <a href="#"><img src="{{asset('store/img/logo/logo.png')}}" alt="" /></a>
               </div>
               <div class="footer_contact">
                 <div class="footer_contact_list">
-                  <span>Our Location</span>
+                  <span class="text-black">Our Location</span>
                   <p>Ta Quang Buu, Bach Khoa, Hai Ba Trung, Ha Noi</p>
                 </div>
                 <div class="footer_contact_list">
-                  <span>24/7 hotline:</span>
+                  <span class="text-black">24/7 hotline:</span>
                   <a href="tel:(+99)0521282399">(+84) 098 368 3244</a>
                 </div>
               </div>

@@ -13,8 +13,7 @@ class Role extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'role_name',
-        'created_at',
-        'updated_at',
+        'is_deleted',
     ];
     public $timestamps = true;
     public function admins()

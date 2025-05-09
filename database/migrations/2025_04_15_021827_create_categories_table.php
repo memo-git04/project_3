@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('category_name');
-            $table->boolean('is_deleted')->default(1); // 0: deleted, 1: not deleted
+            $table->boolean('is_deleted')->default(0); // 1: deleted, 0: not deleted
             $table->timestamps();
         });
     }

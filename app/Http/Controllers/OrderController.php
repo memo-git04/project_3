@@ -7,9 +7,11 @@ use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order_item;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use function Laravel\Prompts\table;
 
 class OrderController extends Controller
 {
@@ -156,6 +158,78 @@ class OrderController extends Controller
         }
         return Redirect::route('orderHistory');
     }
+
+    public function applyCoupon(Request $request){
+        //get value from Form Request
+        $couponCode = $request->input('coupon_code');
+//        $cartTotal = $request->input('cart_total');
+        $cart = session('cart', []);
+
+        // Tính tổng tiền giỏ hàng
+        $cartTotal = 0;
+        foreach ($cart as $item) {
+            $cartTotal += $item['price'] * $item['quantity'];
+        }
+
+        //check promotion has exist
+        $promotion = Promotion::where('code', $couponCode)->fisrt();
+
+        if(!$promotion){
+            return Redirect::back();
+        }
+        //check validation of promotion
+        if($promotion->start_date >  now()  || $promotion->end_date < now() ){
+            return Redirect::back();
+        }
+        //Check Min order Amount of order
+        if($cartTotal < $promotion->min_order_amount){
+            return Redirect::back();
+        }
+        //Check usage quantity
+        if($promotion->current_usage >= $promotion->usage_limit){
+            return Redirect::back();
+        }
+        //Check if customer used vouncher
+        $customerID = session('customer.id');
+        $used = DB::table('promotion_customers')
+            ->where('customer_id', $customerID)
+            ->where('promotion_id', $promotion->id)
+            ->exists();
+        if($used){
+            return Redirect::back();
+        }
+
+        //Apply vouncher
+        session()->put('coupon', [
+            'code' =>$promotion->code,
+            'discount' => $promotion->discount_amount,
+        ]);
+        //Add usage vouncher quantity
+        $promotion->increment('current_usage');
+
+        //save data into promotion_customers Table
+        DB::table('promotion_customers')->insert([
+            'customer_id' => $customerID,
+            'promotion_id' => $promotion->id,
+        ]);
+
+        return Redirect::back();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Display the specified resource.

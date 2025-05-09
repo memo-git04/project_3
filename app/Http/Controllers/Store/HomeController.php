@@ -24,10 +24,22 @@ class HomeController extends Controller
 
 //        $value = unserialize($request->cookie('cart'));
 
-        return view('shop.content.index');
+        $brands = Brand::all();
+        $sizes = Size::all();
+        $categories = Category::all();
+        $products = Product::with('productVariants')->get();
+        $variants = Product_variant::with('product', 'images')->paginate(6);
+        return view('shop.content.index',[
+            'brands' => $brands,
+            'sizes' => $sizes,
+            'categories' => $categories,
+            'products' => $products,
+            'variants' => $variants,
+        ]);
     }
 
     public function productDetail(Product $product){
+        $title = 'Product Detail';
         //get categories, brands, materials, origins from database
         $categories = Category::all();
         $brands = Brand::all();
@@ -38,9 +50,10 @@ class HomeController extends Controller
         $sizes = \App\Models\Size::all();
 
         //get product_variant from database
-        $variants = $product->productVariants()->with(['color', 'size', 'images'])->get();
+        $variants = $product->productVariants()->with(['color', 'size', 'images'])->paginate(3);
 
         return view('shop.content.product-details', [
+            'title' => $title,
             'product' => $product,
             'categories' => $categories,
             'brands' => $brands,
@@ -61,7 +74,7 @@ class HomeController extends Controller
         //get all products
          $products = Product::with('productVariants')->get();
         //get all products with variants
-        $variants = Product_variant::with('product', 'images')->get();
+        $variants = Product_variant::with('product', 'images')->paginate(9);
 //         dd($products);
 //         dd($variants);
         return view('shop.content.shop', [

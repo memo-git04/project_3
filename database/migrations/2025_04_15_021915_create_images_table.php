@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
             $table->string('url');
-            $table->boolean('is_primary')->default(0); // 1: primary image, 0: not primary
+            $table->boolean('is_primary')->default(0); // 0: primary image, 1: not primary
             $table->boolean('is_deleted')->default(0); // 1: deleted, 0: not deleted
             $table->timestamps();
         });

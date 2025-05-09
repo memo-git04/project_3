@@ -13,6 +13,7 @@ class Payment_method extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'method_name',
+        'is_deleted',
     ];
     public $timestamps = true;
     public function orders()

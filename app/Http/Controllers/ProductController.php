@@ -87,7 +87,6 @@ class ProductController extends Controller
 //                    $imageName = $request->file('images')->getClientOriginalName();
                     foreach ($request->file('images') as $imageFile) {
                         // Store image in storage/public/images
-
                         $filePath = $imageFile->store('images', 'public');
 
                         // Save image details in the images table

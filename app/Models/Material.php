@@ -13,6 +13,7 @@ class Material extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'material_name',
+        'is_deleted',
     ];
     public $timestamps = true;
     public function products()

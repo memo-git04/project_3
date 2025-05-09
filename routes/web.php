@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\HomeAdminController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Store\HomeController;
@@ -17,16 +18,16 @@ Route::get('/', function () {
 
 Route::get('/', [HomeAdminController::class, 'index'])->name('home');
 
-Route::get('/login-page', [\App\Http\Controllers\CustomerController::class, 'customerLogin'])
+Route::get('/login-page', [CustomerController::class, 'customerLogin'])
     ->name('customerLogin');
-Route::post('/login-page', [\App\Http\Controllers\CustomerController::class, 'loginCustomerProcess'])
+Route::post('/login-page', [CustomerController::class, 'loginCustomerProcess'])
     ->name('loginCustomerProcess');
-Route::get('/logout-page', [\App\Http\Controllers\CustomerController::class, 'logoutCustomer'])
+Route::get('/logout-page', [CustomerController::class, 'logoutCustomer'])
     ->name('logoutCustomer');
 
-Route::get('/register', [\App\Http\Controllers\CustomerController::class, 'register'])
+Route::get('/register', [CustomerController::class, 'register'])
     ->name('register');
-Route::post('/register', [\App\Http\Controllers\CustomerController::class, 'registerProcess'])
+Route::post('/register', [CustomerController::class, 'registerProcess'])
     ->name('registerProcess');
 
 Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])
@@ -48,11 +49,17 @@ Route::get('/orders/filter', [\App\Http\Controllers\OrderController::class, 'fil
 
 Route::get('/home', [HomeController::class, 'index'])->name('homePage');
 Route::get('/shop', [HomeController::class,'shop'])->name('shop');
-Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
-
+Route::get('/profile', [CustomerController::class, 'index'])
+    ->name('profile');
+Route::post('/profile/update/{customer}', [CustomerController::class, 'update'])
+    ->name('profile.update');
 
 Route::get('/shop/product-detail/{product}', [HomeController::class, 'productDetail'])
     ->name('products.products-detail');
+
+
+Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
+Route::post('/cart/apply-coupon', [OrderController::class, 'applyCoupon'])->name('cart.apply_coupon');
 Route::get('/add-to-cart/{product}', [\App\Http\Controllers\ProductController::class, 'addToCart'])
     ->name('products.add-to-cart');
 Route::put('/add-to-cart', [\App\Http\Controllers\ProductController::class, 'updateCart'])

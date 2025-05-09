@@ -20,7 +20,19 @@ class Customer extends Model implements \Illuminate\Contracts\Auth\Authenticatab
         'phone',
         'address',
         'password',
+        'img',
         'is_deleted',
     ];
     public $timestamps = true;
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'customer_id', 'id');
+    }
+
+    public function promotions()
+    {
+        return $this->belongsToMany(Promotion::class, 'customer_promotion', 'customer_id', 'promotion_id')
+            ->withTimestamps();
+    }
 }

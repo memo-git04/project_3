@@ -16,7 +16,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        return view('shop.content.profile');
     }
 
     /**
@@ -56,7 +56,20 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        if ($request->hasFile('img') ) {
+            $fileName = time() . '.' . $request->img->extension(); // Tạo tên file duy nhất
+            $filePath = $request->file('img')->storeAs('profile_img', $fileName, 'public');
+
+            $customer->img = $filePath;
+        }
+
+        $customer->update([
+            'user_name' => $request->user_name,
+            'fullname' => $request->fullname,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'img' => $customer->img ?? $customer->getOriginal('img'),
+        ]);
     }
 
     /**

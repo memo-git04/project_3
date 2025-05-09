@@ -107,14 +107,17 @@
                 <div class="cart_page_bottom">
                     <div class="row">
                         <div class="col-lg-4 col-md-6 col-sm-6">
-
                         </div>
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="shopping_coupon_calculate">
                                 <h3 class="border-bottom">Coupon Discount   </h3>
                                 <p>Enter your coupon code if you have one.</p>
-                                <input class="border" placeholder="Enter your code" type="text">
-                                <button class="btn btn-primary" type="submit">apply coupon</button>
+                                <form action="{{ route('cart.apply_coupon') }}" method="POST">
+                                    @csrf
+{{--                                    <input type="hidden" name="cart_total" value="{{ $total }}">--}}
+                                    <input class="border" name="coupon_code" placeholder="Enter your code" type="text">
+                                    <button class="btn btn-primary" type="submit">Apply Coupon</button>
+                                </form>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 col-sm-8">
@@ -122,12 +125,23 @@
                                <div class="grand_totall_inner border-bottom">
                                    <div class="cart_subtotal d-flex justify-content-between">
                                        <p>sub total </p>
-                                       <span>{{$total}}</span>
+                                       <span>${{$total}}</span>
                                    </div>
-                                   <div class="cart_grandtotal d-flex justify-content-between">
-                                       <p>grand total</p>
-                                       <span>$126.00</span>
-                                   </div>
+                                   @if(session()->has('coupon'))
+                                       <div class="cart_discount d-flex justify-content-between">
+                                           <p>Discount ({{session('coupon')['code']}})</p>
+                                           <span class="text-danger">-{{ session('coupon')['discount'] }}</span>
+                                       </div>
+                                       <div class="cart_grandtotal d-flex justify-content-between">
+                                           <p>Final total</p>
+                                           <span>${{ $total - session('coupon')['discount'] }}</span>
+                                       </div>
+                                   @else
+                                       <div class="cart_grandtotal d-flex justify-content-between">
+                                           <p>grand total</p>
+                                           <span>${{$total}}</span>
+                                       </div>
+                                   @endif
                                </div>
                                <div class="proceed_checkout_btn">
                                    <a class="btn btn-primary" href="{{route('checkout')}}">Proceed to Checkout</a>

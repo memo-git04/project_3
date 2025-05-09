@@ -24,7 +24,6 @@ class Admin extends Model implements Authenticatable
         'password',
         'phone',
         'address',
-        'is_active',
         'is_deleted',
         'role_id'
     ];

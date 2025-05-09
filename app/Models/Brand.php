@@ -13,6 +13,7 @@ class Brand extends Model
     public $primaryKey = 'id';
     protected $fillable = [
         'brand_name',
+        'is_deleted'
     ];
     public $timestamps = true;
     public function products()

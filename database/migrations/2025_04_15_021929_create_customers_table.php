@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('password')->nullable();
+            $table->string('img')->nullable();
             $table->boolean('is_deleted')->default(0); // 1: deleted, 0: not deleted
             $table->timestamps();
         });

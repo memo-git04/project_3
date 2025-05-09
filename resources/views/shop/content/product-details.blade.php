@@ -4,7 +4,7 @@
 @section('content')
 
     <!--breadcrumbs area start-->
-    <div class="breadcrumbs_area breadcrumbs_product">
+    <div class="breadcrumbs_area breadcrumbs_product" style="margin-top: 100px">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -12,7 +12,7 @@
                         <ul>
                             <li><a href="">home</a></li>
                             <li><a href="">shop</a></li>
-                            <li>Product Example</li>
+                            <li>{{$title}}</li>
                         </ul>
                     </div>
                 </div>
@@ -26,120 +26,127 @@
         <div class="container">
             <div class="row">
                 @foreach($variants as $variant )
-                    <div class="col-lg-6 col-md-6">
+                    @if($loop->first)
+                        <div class="col-lg-6 col-md-6">
                         <div class="product_zoom_gallery">
                            <div class="zoom_gallery_inner d-flex">
                                <div class="zoom_tab_img">
                                    @foreach($variant->images as $image)
                                        @if($image->is_primary == 1)
-                                           <a class="zoom_tabimg_list" href="javascript:void(0)"><img src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="tab-thumb"></a>
+                                           <a class="zoom_tabimg_list" href="javascript:void(0)">
+                                               <img src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="tab-thumb">
+                                           </a>
                                        @endif
                                    @endforeach
-
-
                                </div>
                                <div class="product_zoom_main_img">
-{{--                                    <div class="product_zoom_thumb">--}}
-{{--                                        <img data-image=""--}}
-{{--                                             src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="">--}}
-{{--                                    </div>--}}
-
+                                    <div class="product_zoom_thumb">
+                                        <img data-image=""
+                                             src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="product_d_right">
-                           <form action="#">
-                                <h1 class="product_name">{{$variant->product->product_name}}</h1>
-                                <div class="product_ratting_review d-flex align-items-center">
-                                    <div class=" product_ratting">
-                                        <ul class="d-flex">
-                                            <li><a href="#"><i class="ion-ios-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-ios-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-ios-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-ios-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-ios-star"></i></a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="product_review">
-                                        <ul class="d-flex">
-                                            <li>4 reviews</li>
-                                            <li>Write your review</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="price_box">
-                                    <span class="current_price">{{$variant->price}}</span>
-                                </div>
-                                <div class="product_availalbe">
-                                    <ul class="d-flex">
-                                        <li><i class="icon-layers icons"></i> Only <span>15</span> left </li>
-                                        <li>Availalbe: <span class="stock">In Stock</span></li>
-                                    </ul>
-                                </div>
-                                <div class="product_desc">
-                                    <p>{{$variant->product->description}}</p>
-                                </div>
-                                <div class="product_variant">
-                                    <div class="filter__list widget_color d-flex align-items-center">
-                                        <h3>select color</h3>
-                                        <ul>
-                                           <li>
-                                                <input type="checkbox">
-                                                <span class="checkmark color1"></span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox">
-                                                <span class="checkmark color2"></span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox">
-                                                <span class="checkmark color3"></span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox">
-                                                <span class="checkmark color5"></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="filter__list widget_size d-flex align-items-center">
-                                        <h3>select size</h3>
-                                        <ul>
-                                            @foreach($sizes as $size)
-                                                <li>
-                                                    <a href="javascript:void(0)">{{$size->size_name}}</a>
-                                                </li>
-                                            @endforeach
 
-                                        </ul>
-                                    </div>
-
-                                    <div class="variant_quantity_btn d-flex">
-                                        <div class="pro-qty border">
-                                            <input min="1" max="100" type="text" value="1">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="product_d_right">
+                               <form action="#">
+                                    <h1 class="product_name">{{$variant->product->product_name}}</h1>
+                                    <div class="product_ratting_review d-flex align-items-center">
+                                        <div class=" product_ratting">
+                                            <ul class="d-flex">
+                                                <li><a href="#"><i class="ion-ios-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-ios-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-ios-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-ios-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-ios-star"></i></a></li>
+                                            </ul>
                                         </div>
-                                        <button class="button btn btn-primary" type="submit">
-                                            <i class="ion-android-add"></i>
-                                            <a href="{{route('products.add-to-cart', $variant->product->id)}}">
-                                                Add To Cart
-                                        </button>
-                                        <a class="wishlist" href="#"><i class="ion-ios-heart"></i></a>
+                                        <div class="product_review">
+                                            <ul class="d-flex">
+                                                <li>4 reviews</li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="priduct_social d-flex">
-                                    <span>SHARE: </span>
-                                    <ul>
-                                        <li><a href="#"><i class="ion-social-twitter"></i></a></li>
-                                        <li><a href="#"><i class="ion-social-facebook"></i></a></li>
-                                        <li><a href="#"><i class="ion-social-googleplus-outline"></i></a></li>
-                                        <li><a href="#"><i class="ion-social-pinterest"></i></a></li>
-                                        <li><a href="#"><i class="ion-social-instagram-outline"></i></a></li>
-                                    </ul>
-                                </div>
-                            </form>
+                                    <div class="price_box">
+                                        <span class="current_price">{{$variant->price}}</span>
+                                    </div>
+                                    <div class="product_availalbe">
+                                        <ul class="d-flex">
+                                            <li><i class="icon-layers icons"></i> Only <span>15</span> left </li>
+                                            <li>Availalbe: <span class="stock">In Stock</span></li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="product_variant">
+                                        <div class="filter__list widget_size d-flex align-items-center">
+                                            <h3>Category</h3>
+                                            <ul>
+                                                @foreach($categories as $category)
+                                                    <a href="javascript:void(0)">{{$category->category_name}}</a>
+                                                @endforeach
+
+                                            </ul>
+                                        </div>
+                                        <div class="filter__list widget_color d-flex align-items-center">
+                                            <h3>select color</h3>
+                                            <ul>
+                                               <li>
+                                                    <input type="checkbox">
+                                                    <span class="checkmark color1"></span>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox">
+                                                    <span class="checkmark color2"></span>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox">
+                                                    <span class="checkmark color3"></span>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox">
+                                                    <span class="checkmark color5"></span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="filter__list widget_size d-flex align-items-center">
+                                            <h3>select size</h3>
+                                            <ul>
+                                                @foreach($sizes as $size)
+                                                    <li>
+                                                        <a href="javascript:void(0)">{{$size->size_name}}</a>
+                                                    </li>
+                                                @endforeach
+
+                                            </ul>
+                                        </div>
+
+                                        <div class="variant_quantity_btn d-flex">
+                                            <div class="pro-qty border">
+                                                <input min="1" max="100" type="text" value="1">
+                                            </div>
+                                            <button class="button btn btn-primary" type="submit">
+                                                <i class="ion-android-add"></i>
+                                                <a href="{{route('products.add-to-cart', $variant->product->id)}}">
+                                                    Add To Cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="priduct_social d-flex">
+                                        <span>SHARE: </span>
+                                        <ul>
+                                            <li><a href="#"><i class="ion-social-twitter"></i></a></li>
+                                            <li><a href="#"><i class="ion-social-facebook"></i></a></li>
+                                            <li><a href="#"><i class="ion-social-googleplus-outline"></i></a></li>
+                                            <li><a href="#"><i class="ion-social-pinterest"></i></a></li>
+                                            <li><a href="#"><i class="ion-social-instagram-outline"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endforeach
             </div>
         </div>
@@ -336,62 +343,79 @@
                 </div>
             </div>
             <div class="product_container row">
-                <div class=" product_slick slick_slider_activation" data-slick='{
-                    "slidesToShow": 4,
-                    "slidesToScroll": 1,
-                    "arrows": true,
-                    "dots": false,
-                    "autoplay": false,
-                    "speed": 300,
-                    "infinite": true,
-                    "responsive":[
-                      {"breakpoint":992, "settings": { "slidesToShow": 3 } },
-                      {"breakpoint":768, "settings": { "slidesToShow": 2 } },
-                      {"breakpoint":300, "settings": { "slidesToShow": 1 } }
-                     ]
-                }'>
-                    <div class="col-lg-3">
-                        <article class="single_product">
-                            <figure>
-                                <div class="product_thumb">
-                                    <a href="product-details.html" >
-                                        <img class="primary_img" src="assets/img/product/product1.jpg" alt="consectetur">
-                                    </a>
-                                    <div class="product_action">
-                                        <ul>
-                                            <li class="wishlist"><a href="#" data-tippy="Wishlist" data-tippy-inertia="true" data-tippy-delay="50"
-                                            data-tippy-arrow="true" data-tippy-placement="left"><i class="icon-heart icons"></i></a></li>
+                <div class="product_container row">
+                    <div class="row shop_wrapper">
+                        @foreach($variants as $variant)
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="single_product">
+                                    <div class="product_thumb">
+                                        @foreach($variant->images as $image)
+                                            @if($image->is_primary == 1)
+                                                <a href="{{route('products.products-detail', $variant->product->id)}}" >
+                                                    <img class="primary_img" src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="consectetur">
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                        <div class="product_action">
+                                            <ul>
+                                                <li class="wishlist"><a href="#" data-tippy="Wishlist" data-tippy-inertia="true" data-tippy-delay="50"
+                                                                        data-tippy-arrow="true" data-tippy-placement="left"><i class="icon-heart icons"></i></a></li>
 
-                                            <li class="quick_view"><a data-toggle="modal" data-target="#modal_box" data-tippy="Quick View" href="#" data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="left"><i class="icon-size-fullscreen icons"></i></a></li>
-                                            <li class="compare"><a data-tippy="Compare" href="#" data-tippy-inertia="true" data-tippy-delay="50"
-                                            data-tippy-arrow="true" data-tippy-placement="left"><i class="icon-refresh icons"></i></a></li>
-                                        </ul>
+                                                <li class="quick_view"><a data-toggle="modal" data-target="#modal_box" data-tippy="Quick View" href="#" data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="left"><i class="icon-size-fullscreen icons"></i></a></li>
+                                                <li class="compare"><a data-tippy="Compare" href="#" data-tippy-inertia="true" data-tippy-delay="50"
+                                                                       data-tippy-arrow="true" data-tippy-placement="left"><i class="icon-refresh icons"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="product_label">
+                                            <span>-18%</span>
+                                        </div>
+                                    </div>
+                                    <div class="product_content grid_content text-center">
+                                        <div class="product_ratting">
+                                            <ul class="d-flex justify-content-center">
+                                                <li><a href="#"><i class="ion-android-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star"></i></a></li>
+                                                <li><a href="#"><i class="ion-android-star"></i></a></li>
+                                                <li><span>(2)</span></li>
+                                            </ul>
+                                        </div>
+                                        <h4 class="product_name"><a href="">{{$variant->product->product_name}}</a></h4>
+                                        <div class="price_box">
+                                            <span class="current_price">{{$variant->product->base_price}}</span>
+                                            <span class="old_price">{{$variant->price}}</span>
+                                        </div>
+                                        <div class="add_to_cart">
+                                            <a class="btn btn-primary" href="{{route('products.add-to-cart', $variant->product->id)}}" data-tippy="Add To Cart"  data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="top">Add To Cart</a>
+                                        </div>
+                                    </div>
+                                    <div class="product_list_content">
+                                        <h4 class="product_name"><a href="">{{$variant->product->product_name}}</a></h4>
+                                        <p><a href="#">shows</a></p>
+                                        <div class="price_box">
+                                            <span class="current_price">{{$variant->product->base_price}}</span>
+                                            <span class="old_price">{{$variant->price}}</span>
+                                        </div>
+                                        <div class="product_desc">
+                                            <p>{{$variant->product->description}}</p>
+                                        </div>
+                                        <div class="add_to_cart">
+                                            <a class="btn btn-primary" href="{{route('products.add-to-cart', $variant->product->id)}}" data-tippy="Add To Cart"
+                                               data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="top">
+                                                Add To Cart
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <figcaption class="product_content text-center">
-                                    <div class="product_ratting">
-                                        <ul class="d-flex justify-content-center">
-                                            <li><a href="#"><i class="ion-android-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-android-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-android-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-android-star"></i></a></li>
-                                            <li><a href="#"><i class="ion-android-star"></i></a></li>
-                                            <li><span>(4)</span></li>
-                                        </ul>
-                                    </div>
-                                    <h4 class="product_name"><a href="product-details.html">Basic Joggin Shorts</a></h4>
-                                    <div class="price_box">
-                                        <span class="current_price">$26.00</span>
-                                        <span class="old_price">$62.00</span>
-                                    </div>
-                                    <div class="add_to_cart">
-                                        <a class="btn btn-primary" href="#" data-tippy="Add To Cart"  data-tippy-inertia="true" data-tippy-delay="50" data-tippy-arrow="true" data-tippy-placement="top">Add To Cart</a>
-                                    </div>
-                                </figcaption>
-                            </figure>
-                        </article>
+                            </div>
+                        @endforeach
                     </div>
-
+                    <div class="pagination_style pagination justify-content-center">
+                        <ul class="d-flex">
+                            {{ $variants->links() }}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

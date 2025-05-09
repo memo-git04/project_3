@@ -27,7 +27,7 @@
                             </a>
                         </div>
 
-                        <form class="mt-5 mb-5 login-input" action="{{route('loginProcess')}}" method="post">
+                        <form class="mt-5 mb-5 login-input" action="{{route('loginProcess')}}" method="post" style="padding: 30px">
                             @csrf
                             <div class="form-group">
                                 {{--                                    <label>Email</label>--}}
@@ -38,8 +38,9 @@
                                 <input type="password" name="password" class="form-control" placeholder="Password">
                             </div>
                             <button class="btn login-form__btn submit w-100" name="login" value="login" type="submit">Log In</button>
+                            <p class="mt-5 login-form__footer">Dont have account? <a href="" class="text-primary">Sign Up</a> now</p>
                         </form>
-                        <p class="mt-5 login-form__footer">Dont have account? <a href="" class="text-primary">Sign Up</a> now</p>
+
                     </div>
                 </div>
             </div>

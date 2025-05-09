@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('end_date'); // End date of the promotion
             $table->boolean('is_used')->default(0); // 1: used, 0: not used
             $table->boolean('is_deleted')->default(0); // 1: deleted, 0: not deleted
+            $table->integer('usage_limit');
+            $table->integer('current_usage');
             $table->timestamps();
         });
     }

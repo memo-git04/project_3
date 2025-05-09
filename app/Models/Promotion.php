@@ -18,17 +18,19 @@ class Promotion extends Model
         'is_used',
         'start_date',
         'end_date',
-        'customer_id',
+        'usage_limit',
+        'current_usage',
         'is_deleted',
     ];
     public $timestamps = true;
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class, 'customer_id', 'id');
-    }
+
     public function orders()
     {
         return $this->hasMany(Order::class, 'promotion_id', 'id');
     }
-
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class, 'customer_promotion', 'promotion_id', 'customer_id')
+            ->withTimestamps();
+    }
 }
