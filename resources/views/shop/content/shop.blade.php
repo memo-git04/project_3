@@ -152,8 +152,8 @@
                     </div>
                      <!--shop toolbar end-->
                      <div class="row shop_wrapper">
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
-                            @foreach($variants as $variant)
+                         @foreach($variants as $variant)
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
                                 <div class="single_product">
                                     <div class="product_thumb">
                                         @foreach($variant->images as $image)
@@ -215,8 +215,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                         @endforeach
                     </div>
                     <div class="pagination_style pagination justify-content-center">
                         <ul class="d-flex">

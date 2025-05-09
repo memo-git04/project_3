@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\HomeAdminController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Store\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -222,8 +223,15 @@ Route::middleware('adminLoginMiddleware')->prefix('admin')->group(function () {
     Route::prefix('/orders')->group(function (){
         Route::get('/',[HomeAdminController::class, 'orderManage'])
             ->name('orders');
-        Route::get('/order-item',[HomeAdminController::class, 'orderItem'])
-            ->name('orders.item');
+        Route::get('/order-item/{order}',[HomeAdminController::class, 'orderItem'])
+            ->name('orders.items');
+        Route::post('/update-status/{order}',[HomeAdminController::class, 'updateStatusOrder'])
+            ->name('orders.updateOrder');
+        Route::post('/orders/delete/{order}', [HomeAdminController::class, 'deleteOrder'])
+            ->name('orders.delete');
+        Route::get('/orders/filter-order/{status}', [HomeAdminController::class, 'filterOrders'])
+            ->name('orders.filterOrder');
     });
+
 
 });

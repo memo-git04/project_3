@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('receiver_name')->nullable();
             $table->string('receiver_phone')->nullable();
             $table->string('receiver_address')->nullable();
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }

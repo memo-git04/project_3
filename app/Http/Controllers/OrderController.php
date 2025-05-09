@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order_item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class OrderController extends Controller
@@ -21,12 +23,14 @@ class OrderController extends Controller
         ]);
     }
 
-    public function orderHistory()
+    public function orderHistory(Request $request)
     {
+        $customer = $request->session()->get('customer'); // Lấy toàn bộ đối tượng Customer từ session
+        $customerId = $customer->id;
+//        dd($customerId);
         // Lấy tất cả thông tin đơn hàng và chi tiết các sản phẩm trong từng đơn hàng
-        $orders = Order::with(['orderItems.productVariant.product', 'status', 'paymentMethod'])
-//            ->where('customer_id', auth()->id()) // Lọc theo khách hàng đã đăng nhập (nếu có hệ thống auth)
-//            ->orderBy('order_date', 'desc') // Sắp xếp theo ngày đặt hàng mới nhất
+        $orders = Order::with(['orderItems.productVariant.product', 'status', 'customer', 'paymentMethod'])
+            ->where('customer_id', $customerId)
             ->get();
 //        dd($orders);
         // Trả về view với dữ liệu đơn hàng
@@ -184,6 +188,7 @@ class OrderController extends Controller
     {
         //
     }
+
 
 
 

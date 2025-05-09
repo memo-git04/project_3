@@ -25,6 +25,15 @@
 
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
 
+{{--    Link Chart--}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"
+            integrity="sha512-XSmbX3mhrD2ix5fXPTRQb2FwK22sRMVQTpBP2ac8hX7Dh/605hA2QDegVWiAvZPiXIxOV0CbkmUjGionDpbCmw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    </script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -32,24 +41,6 @@
 
 <body>
 
-<!--*******************
-    Preloader start
-********************-->
-<!-- <div id="preloader">
-    <div class="loader">
-        <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
-        </svg>
-    </div>
-</div> -->
-<!--*******************
-    Preloader end
-******************** -->
-
-
-<!--**********************************
-    Main wrapper start
-***********************************-->
 <div id="main-wrapper">
 
     <!--**********************************
@@ -208,50 +199,40 @@
                             </div>
                         </div>
                     </li>
-                    <li class="icons dropdown d-none d-md-flex">
-                        <a href="javascript:void(0)" class="log-user" data-toggle="dropdown">
-                            <span>English</span> <i class="fa fa-angle-down f-s-14" aria-hidden="true"></i>
-                        </a>
-                        <div class="drop-down dropdown-language animated fadeIn  dropdown-menu">
-                            <div class="dropdown-content-body">
-                                <ul>
-                                    <li><a href="javascript:void()">English</a></li>
-                                    <li><a href="javascript:void()">Dutch</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
+
                     <li class="icons dropdown">
-                        <div class="user-img c-pointer position-relative" data-toggle="dropdown">
-
-                            <a href="">
-
-                            </a>
-
-
-                            <span class="activity active"></span>
-                            <img src="{{ asset('admin/images/user/1.png') }}" height="40" width="40" alt="">
-                        </div>
-                        <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
-                            <div class="dropdown-content-body">
-                                <ul>
-                                    <li>
-                                        <a href=""><i class="icon-user"></i> <span>Profile</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void()">
-                                            <i class="icon-envelope-open"></i> <span>Massage</span>
-                                            <div class="badge gradient-3 badge-pill gradient-1">3</div>
-                                        </a>
-                                    </li>
-                                    <hr class="my-2">
-                                    <li>
-                                        <a href=""><i class="icon-lock"></i> <span>Login</span></a>
-                                    </li>
-                                    <li><a href="{{ route('logout')}}"><i class="icon-key"></i> <span>Log out</span></a></li>
-                                </ul>
+                        @if(session()->has('admin'))
+                            <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                                <span class="activity active"></span>
+                                <img src="{{ asset('admin/images/user/1.png') }}" height="40" width="40" alt="">
                             </div>
-                        </div>
+                            <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                                <div class="dropdown-content-body">
+                                    <ul>
+                                        <li>
+                                            <a href=""><i class="icon-user"></i> <span>{{ session()->get('admin')->full_name }}</span></a>
+                                        </li>
+                                        <hr class="my-2">
+                                        <li><a href="{{ route('logout')}}"><i class="icon-key"></i> <span>Log out</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        @else
+                            <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                                <span class="activity active"></span>
+                                <img src="{{ asset('admin/images/user/1.png') }}" height="40" width="40" alt="">
+                            </div>
+                            <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                                <div class="dropdown-content-body">
+                                    <ul>
+                                        <li>
+                                            <a href=""><i class="icon-lock"></i> <span>Login</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        @endif
                     </li>
                 </ul>
             </div>
@@ -294,6 +275,15 @@
                     </ul>
                 </li>
 
+                <li class="mega-menu mega-menu-sm">
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="fa-solid fa-cart-shopping"></i><span class="nav-text">Order Management </span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="{{route('orders')}}">Order management</a></li>
+
+                    </ul>
+                </li>
 
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
@@ -307,7 +297,7 @@
 
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="fa-solid fa-people-group"></i><span class="nav-text">Brand Management</span>
+                        <i class="fa-solid fa-shirt"></i><span class="nav-text">Brand Management</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('brands.index') }}">Brand List </a></li>
@@ -317,7 +307,7 @@
 
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="fa-solid fa-people-group"></i><span class="nav-text">Color Management</span>
+                        <i class="fa-solid fa-palette"></i></i><span class="nav-text">Color Management</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('colors.index') }}">Color List </a></li>
@@ -327,7 +317,7 @@
 
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="fa-solid fa-people-group"></i><span class="nav-text">Material Management</span>
+                        <i class="fa-brands fa-cotton-bureau"></i></i><span class="nav-text">Material Management</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('materials.index') }}">Material List </a></li>
@@ -337,7 +327,7 @@
 
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="fa-solid fa-people-group"></i><span class="nav-text">Size Management</span>
+                        <i class="fa-solid fa-hat-cowboy-side"></i><span class="nav-text">Size Management</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('sizes.index') }}">Size List </a></li>
@@ -346,22 +336,14 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="fa-solid fa-people-group"></i><span class="nav-text">Origin Management</span>
+                        <i class="fa-solid fa-globe"></i><span class="nav-text">Origin Management</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a href="{{ route('origins.index') }}">Origin List </a></li>
                         <li><a href="{{ route('origins.create') }}">Add new origin</a></li>
                     </ul>
                 </li>
-                <li class="mega-menu mega-menu-sm">
-                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="fa-solid fa-cart-shopping"></i><span class="nav-text">Order Management </span>
-                    </a>
-                    <ul aria-expanded="false">
-                        <li><a href="{{route('orders')}}">Order management</a></li>
 
-                    </ul>
-                </li>
 
                 <li class="nav-label">ADDONS</li>
                 <li>
@@ -415,9 +397,7 @@
         Footer end
     ***********************************-->
 </div>
-<!--**********************************
-    Main wrapper end
-***********************************-->
+
 
 <!--**********************************
     Scripts
