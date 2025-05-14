@@ -173,15 +173,16 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+//        dd($request->all());
        // / Update the product details
         $product->update([
             'product_name' => $request->edit_name,
-            'category_id' => $request->edit_category,
-            'brand_id' => $request->edit_brand,
-            'material_id' => $request->edit_material,
-            'origin_id' => $request->edit_origin,
             'base_price' => $request->edit_base_price,
-            'description' => $request->edit_description
+            'brand_id' => $request->edit_brand ?? $product->brand_id,
+            'category_id' => $request->edit_category ?? $product->category_id,
+            'material_id' => $request->edit_material ?? $product->material_id,
+            'origin_id' => $request->edit_origin ?? $product->origin_id,
+            'description' => $request->edit_description ?? $product->description,
         ]);
 
         // Update product variants
@@ -189,52 +190,17 @@ class ProductController extends Controller
             foreach ($request->edit_variant as $variant) {
                 // Search for the variant by ID if available
                 $product_variant = Product_variant::find($variant['id'] ?? null);
-
+//                dd($product_variant);
                 if ($product_variant) {
-                    // Update existing variant
                     $product_variant->update([
-                        'color_id' => $variant['color'],
-                        'size_id' => $variant['size'],
                         'stock_quantity' => $variant['quantity'],
                         'price' => $variant['price'],
                     ]);
-                } else {
-                    // Check if a variant with the same color and size already exists
-                    $existing_variant = Product_variant::where('product_id', $product->id)
-                        ->where('color_id', $variant['color'])
-                        ->where('size_id', $variant['size'])
-                        ->first();
-
-                    if (!$existing_variant) {
-                        // Create new variant if it doesn't exist
-                        Product_variant::create([
-                            'product_id' => $product->id,
-                            'color_id' => $variant['color'],
-                            'size_id' => $variant['size'],
-                            'stock_quantity' => $variant['quantity'],
-                            'price' => $variant['price'],
-                        ]);
-                    }
                 }
-                // Handle image uploads for this product variant
-                if ($request->hasFile('edit_images')) {
-                    foreach ($request->file('edit_images') as $imageFile) {
-                        // Store image in storage/public/images
-                        $filePath = $imageFile->store('images', 'public');
-
-                        // Save image details in the images table
-                        $img = Image::create([
-                            'product_variant_id' => $product_variant->id,
-                            'url' => $filePath,
-                            'is_primary' => false, // Set to true if this is a primary image
-                            'is_deleted' => false,
-                        ]);
-                    }
-                }
+//                dd($product_variant);
             }
         }
-        dd($img);
-//        return Redirect::back()->with('success', 'Product updated successfully');
+        return Redirect::back();
     }
 
     /**
@@ -288,6 +254,14 @@ class ProductController extends Controller
         //Nếu cart tồn lại trên session thì lấy về, còn chưa thì tạo 1 mảng mới
         $cart = session()->get('cart', []);
 
+//        $variant = $product->productVariants
+//            ->where('color_id', $request->color_id)
+//            ->where('size_id', $request->size_id)
+//            ->first();
+////        dd($variant);
+//        if (!$variant) {
+//            return dd('Không tìm thấy sản phẩm với màu sắc và kích thước đã chọn.');
+//        }
 //        dd($cart);
         //Kiểm tra trên cart đã có snar phẩm được chọn chưa
         if(isset($cart[$product->id])){
@@ -303,15 +277,58 @@ class ProductController extends Controller
                 "quantity" => 1,
                 "price" => $product->base_price,
                 "image" => $url->url,
-                'color_name' =>$variant->color->color_name,
-                'size_name' => $variant->size->size_name,
+                'color_id' => 1,
+                'size_id' => 1,
             ];
         }
         //Lưu cart lên session
+        //check if product is already in the cart
+//        if (isset($cart[$product->id]) && isset($cart[$product->id]['color_id']) && isset($cart[$product->id]['size_id']) && $cart[$product->id]['color_id'] == $request->color_id && $cart[$product->id]['size_id'] == $request->size_id ){
+//            $cart[$product->id]['quantity']++;
+//        }else{
+//            $variant = $product->productVariants->where('color_id', $request->color_id)
+//                ->where('size_id', $request->size_id)->first();
+//            $cart[$product->id] = [
+//                "product_id" => $product->id,
+//                "product_variant_id" => $variant->id,
+//                "name" => $product->product_name,
+//                "quantity" => 1,
+//                "price" => $product->base_price,
+//                "color_id" => $request->color_id,
+//                "size_id" => $request->size_id,
+//                "color_name" => $variant->color->color_name,
+//                "size_name" => $variant->size->size_name,
+//            ];
+//        }
         session()->put('cart', $cart);
 //        dd($cart);
         return Redirect::route('cart');
     }
+
+    public function addToCartPost(Product $product, Image $image, Request $request){
+        $cart = session()->get('cart', []);
+        if(isset($cart[$product->id])){
+            $cart[$product->id]['quantity']++;
+        } else {
+            $url = $image->where('product_variant_id', $product->productVariants[0]['id'])->first();
+            $variant = $product->productVariants[0];
+//            dd($variant);
+            $cart[$product->id] = [
+                "product_id" =>$product->id,
+                "product_variant_id" => $product->productVariants[0]->id,
+                "name" => $product->product_name,
+                "quantity" => $request->quantity,
+                "price" => $product->base_price,
+                "image" => $url->url,
+                'color_id' =>$request->color_id,
+                'size_id' => $request->size_id,
+            ];
+        }
+        session()->put('cart', $cart);
+//        dd($cart);
+        return Redirect::route('cart');
+    }
+
     public function updateCart(Request $request)
     {
 //        // Update cart logic here
@@ -333,6 +350,8 @@ class ProductController extends Controller
         //Lấy sản phẩm có id và số lượng muốn cập nhật
 //        dd($request);
         $products = $request->quantity;
+        $productsSize = $request->size;
+        $productsColor = $request->color;
         //Lấy cart
         $cart = session()->get('cart', []);
 //        dd($products);
@@ -340,6 +359,15 @@ class ProductController extends Controller
 //            dd($id);
             $cart[$id]['quantity'] = $quantity;
         }
+        foreach ($productsSize as $id => $size) {
+//            dd($id);
+            $cart[$id]['size_id'] = $size;
+        }
+        foreach ($productsColor as $id => $color) {
+//            dd($id);
+            $cart[$id]['color_id'] = $color;
+        }
+
         session()->put('cart', $cart);
         return Redirect::route('cart');
     }

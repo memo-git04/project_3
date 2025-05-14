@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('password')->nullable();
             $table->string('img')->nullable();
+            $table->string('reset_password')->nullable();
+            $table->timestamp('reset_expires')->nullable();
             $table->boolean('is_deleted')->default(0); // 1: deleted, 0: not deleted
             $table->timestamps();
         });

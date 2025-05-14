@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Color;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order_item;
 use App\Models\Promotion;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -20,6 +22,12 @@ class OrderController extends Controller
     {
         //get cart from session
         $value= session()->get('cart');
+        foreach ($value as $key => $item){
+            $size_name = Size::where('id', $item['size_id'])->first();
+            $value[$key]['size_name'] = $size_name->size_name;
+            $color_name = Color::where('id', $item['color_id'])->first();
+            $value[$key]['color_name'] = $color_name->color_name;
+        }
         return view('shop.content.checkout',[
             'cart' =>$value,
         ]);

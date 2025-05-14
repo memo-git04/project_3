@@ -47,11 +47,15 @@ class HomeController extends Controller
         $origins = Origin::all();
         //get colors, sizes, images from database
         $colors = Color::all();
-        $sizes = \App\Models\Size::all();
+        $sizes = Size::all();
+
+        $variantSizeColor = $product->productVariants()
+            ->with(['color', 'size', 'images'])
+            ->get();
 
         //get product_variant from database
         $variants = $product->productVariants()->with(['color', 'size', 'images'])->paginate(3);
-
+//        dd($variants);
         return view('shop.content.product-details', [
             'title' => $title,
             'product' => $product,
@@ -62,6 +66,7 @@ class HomeController extends Controller
             'colors' => $colors,
             'sizes' => $sizes,
             'variants' => $variants,
+            'variantSizeColor' => $variantSizeColor,
         ]);
     }
 
@@ -88,8 +93,14 @@ class HomeController extends Controller
     public function cart(Request $request){
 //        $value = unserialize($request->cookie('cart'));
         $value= $request->session()->get('cart');
+        $colors = Color::all();
+        $sizes = Size::all();
+
+//        dd($productVariants);
         return view('shop.content.cart', [
             'cart' => $value,
+            'colors'=>$colors,
+            'sizes' =>$sizes,
         ]);
 
     }

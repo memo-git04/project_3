@@ -53,6 +53,7 @@
 
     <!--modernizr min js here-->
     <script src="{{asset('store/js/vendor/modernizr-3.7.1.min.js')}}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Structured Data  -->
     <script type="application/ld+json">

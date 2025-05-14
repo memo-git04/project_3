@@ -1,13 +1,11 @@
-
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login </title>
+    <title>Forgot Password </title>
     <link rel="stylesheet" href="./css1/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <!-- bootstrap links -->
@@ -21,13 +19,13 @@
     <style>
         #button {
             border-radius: 50px 50px 50px 50px;
-            width: 433px;
+            width: 345px;
             height: 50px;
         }
 
         #button1 {
             border-radius: 50px 50px 50px 50px;
-            width: 433px;
+            width: 345px;
             height: 50px;
             margin-bottom: 10px;
         }
@@ -72,40 +70,24 @@
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
 
-                                <form class="user" action="{{route('loginCustomerProcess')}}" method="post">
-                                    @csrf
-                                    <div id="input1" class="form-group">
-                                        <input type="email" name="email" value=" " class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
-                                    </div>
+                                <form action="{{route('password.email')}}" class="user" method="post">
 
                                     <div id="input1" class="form-group">
-                                        <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                                        <input type="email" name="email" class="form-control form-control-user" id="input" placeholder="@gmail.com">
                                     </div>
 
-                                    <!-- <button> -->
-                                    <button id="button" name="login" value="login" type="submit" class="btn btn-primary">Login</button>
+                                    <span class="text-danger text-err">
 
-                                    <hr>
-                                    <button id="button1" name="submit" type="submit" class="btn btn-danger"><i class="fab fa-google fa-fw"></i> Login with Google</button>
-                                    <br>
-                                    <button id="button" name="submit" type="submit" class="btn btn-success"><i class="fab fa-facebook-f fa-fw"></i> Login with Facebook</button>
+                                    </span>
                                     <!-- <button> -->
+                                    <button id="button" name="ForgotPassword" value="login" type="submit" class="btn btn-primary">Submit</button>
                                 </form>
-                                <hr>
-                                <div class="text-center">
-                                    <a class="small" href="{{route('password.request')}}">Forgot Password?</a>
-                                </div>
-                                <div class="text-center">
-                                    <a class="small" href="{{route('register')}}">Create an Account!</a>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 
 </div>
@@ -132,6 +114,19 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+<!-- check -->
+<!-- <script>
+    var Input = document.getElementById('input')
+    var submit = document.getElementById('button')
+    Input.onchange = function() {
+        submit.removeAttribute('disabled')
+    }
+    if (Input.value == "") {
+        submit.setAttribute("", "disabled")
+    }
+</script> -->
 
 </body>
 

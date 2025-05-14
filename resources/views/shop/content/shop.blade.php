@@ -16,7 +16,6 @@
                                 <ul>
                                     @foreach($categories as $category)
                                         <li class="widget_sub_categories"><a href="javascript:void(0)" data-toggle="collapse" data-target="#women">{{$category->category_name}}</a>
-
                                         </li>
                                     @endforeach
                                 </ul>

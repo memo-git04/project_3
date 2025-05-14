@@ -24,34 +24,35 @@
     <!--product details start-->
     <section class="product_details mb-135">
         <div class="container">
-            <div class="row">
-                @foreach($variants as $variant )
-                    @if($loop->first)
-                        <div class="col-lg-6 col-md-6">
-                        <div class="product_zoom_gallery">
-                           <div class="zoom_gallery_inner d-flex">
-                               <div class="zoom_tab_img">
-                                   @foreach($variant->images as $image)
-                                       @if($image->is_primary == 1)
-                                           <a class="zoom_tabimg_list" href="javascript:void(0)">
-                                               <img src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="tab-thumb">
-                                           </a>
-                                       @endif
-                                   @endforeach
-                               </div>
-                               <div class="product_zoom_main_img">
-                                    <div class="product_zoom_thumb">
-                                        <img data-image=""
-                                             src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="">
+            <form action="{{ route('products.add-to-cart.post', $product->id) }}" method="POST">
+                @csrf
+                <div class="row align-items-center">
+                    @foreach($variants as $variant )
+                        @if($loop->first)
+                            <div class="col-lg-6 col-md-6">
+                            <div class="product_zoom_gallery">
+                               <div class="zoom_gallery_inner d-flex">
+                                   <div class="zoom_tab_img">
+                                       @foreach($variant->images as $image)
+                                           @if($image->is_primary == 1)
+                                               <a class="zoom_tabimg_list" href="javascript:void(0)">
+                                                   <img src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="tab-thumb">
+                                               </a>
+                                           @endif
+                                       @endforeach
+                                   </div>
+                                   <div class="product_zoom_main_img">
+                                        <div class="product_zoom_thumb">
+                                            <img data-image=""
+                                                 src="{{ asset(\Illuminate\Support\Facades\Storage::url('images/') . $image->url) }}" alt="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
                         <div class="col-lg-6 col-md-6">
                             <div class="product_d_right">
-                               <form action="#">
+                                <input type="hidden" name="product_id" value="{{ $variant->product->id }}">
                                     <h1 class="product_name">{{$variant->product->product_name}}</h1>
                                     <div class="product_ratting_review d-flex align-items-center">
                                         <div class=" product_ratting">
@@ -76,6 +77,7 @@
                                         <ul class="d-flex">
                                             <li><i class="icon-layers icons"></i> Only <span>15</span> left </li>
                                             <li>Availalbe: <span class="stock">In Stock</span></li>
+                                            <li>SKU: <span id="demo"></span></li>
                                         </ul>
                                     </div>
 
@@ -91,44 +93,29 @@
                                         </div>
                                         <div class="filter__list widget_color d-flex align-items-center">
                                             <h3>select color</h3>
-                                            <ul>
-                                               <li>
-                                                    <input type="checkbox">
-                                                    <span class="checkmark color1"></span>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox">
-                                                    <span class="checkmark color2"></span>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox">
-                                                    <span class="checkmark color3"></span>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox">
-                                                    <span class="checkmark color5"></span>
-                                                </li>
-                                            </ul>
+                                               <select id="color" name="color_id" onchange="selectColor()"
+                                                       required style="position: relative; z-index: 10;">
+                                                   @foreach($colors as $color)
+                                                       <option value="{{ $color->id }}">{{ $color->color_name }}</option>
+                                                   @endforeach
+                                               </select>
                                         </div>
                                         <div class="filter__list widget_size d-flex align-items-center">
                                             <h3>select size</h3>
-                                            <ul>
-                                                @foreach($sizes as $size)
-                                                    <li>
-                                                        <a href="javascript:void(0)">{{$size->size_name}}</a>
-                                                    </li>
+                                            <select id="size" name="size_id" required style="position: relative; z-index: 10;" >
+                                                @foreach($sizes  as $size)
+                                                    <option value="{{ $size->id }}">{{ $size->size_name }}</option>
                                                 @endforeach
-
-                                            </ul>
+                                            </select>
+{{--                                            {{ $size->size_name }}--}}
                                         </div>
 
                                         <div class="variant_quantity_btn d-flex">
                                             <div class="pro-qty border">
-                                                <input min="1" max="100" type="text" value="1">
+                                                <input min="1" max="100" name="quantity" type="text" value="1">
                                             </div>
                                             <button class="button btn btn-primary" type="submit">
                                                 <i class="ion-android-add"></i>
-                                                <a href="{{route('products.add-to-cart', $variant->product->id)}}">
                                                     Add To Cart
                                             </button>
                                         </div>
@@ -143,15 +130,26 @@
                                             <li><a href="#"><i class="ion-social-instagram-outline"></i></a></li>
                                         </ul>
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </form>
         </div>
     </section>
     <!--product details end-->
+    <script>
+        {{--const productVariants = @json($variantSizeColor);--}}
+        function selectColor() {
+            const selectedColorId = document.getElementById('color').value;
+            const selectedSizeId = document.getElementById('size').value;
+
+            document.getElementById('demo').innerHTML = 'color' + selectedColorId;
+
+
+        }
+    </script>
 
     <!--product info start-->
     <div class="product_d_info mb-118">
@@ -164,163 +162,12 @@
                                 <li >
                                     <a class="active" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false">Product Description</a>
                                 </li>
-                                <li>
-                                   <a data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews          </a>
-                                </li>
-                                 <li>
-                                   <a data-toggle="tab" href="#tags" role="tab" aria-controls="tags" aria-selected="false">Tags </a>
-                                </li>
-                                <li>
-                                     <a data-toggle="tab" href="#additional" role="tab" aria-controls="additional" aria-selected="false">Additional Information </a>
-                                </li>
-                                <li>
-                                     <a data-toggle="tab" href="#tabinfo" role="tab" aria-controls="tabinfo" aria-selected="false">Custom Tab Info  </a>
-                                </li>
-                                <li>
-                                     <a data-toggle="tab" href="#video" role="tab" aria-controls="video" aria-selected="false">Custom Tab Video </a>
-                                </li>
-
                             </ul>
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="info" role="tabpanel" >
                                 <div class="product_info_content">
-                                    <p>Coupling a blended linen construction with tailored style, the River Island HR Jasper Blazer will imprint a touch of dapper charm into your after-dark wardrobe. <br> Our model wearing a size medium blazer, and usually takes a size medium/38L shirt. <br> He is 6’2 1/2” (189cm) tall with a 38” (96 cm) chest and a 31” (78 cm) waist.</p>
-                                    <ul>
-                                        <li>Length: 74cm</li>
-                                        <li>Regular fit</li>
-                                        <li>Notched lapels</li>
-                                        <li>Twin button front fastening</li>
-                                        <li>Front patch pockets; chest pocket</li>
-                                        <li> Internal pockets</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="reviews" role="tabpanel" >
-                                <div class="reviews_wrapper">
-                                    <h2>1 review for Donec eu furniture</h2>
-                                    <div class="reviews_comment_box">
-                                        <div class="comment_thmb">
-                                            <img src="assets/img/blog/comment2.jpg" alt="">
-                                        </div>
-                                        <div class="comment_text">
-                                            <div class="reviews_meta">
-                                                <div class="star_rating">
-                                                    <ul class="d-flex">
-                                                        <li><a href="#"><i class="icon-star"></i></a></li>
-                                                       <li><a href="#"><i class="icon-star"></i></a></li>
-                                                       <li><a href="#"><i class="icon-star"></i></a></li>
-                                                       <li><a href="#"><i class="icon-star"></i></a></li>
-                                                       <li><a href="#"><i class="icon-star"></i></a></li>
-                                                    </ul>
-                                                </div>
-                                                <p><strong>admin </strong>- September 12, 2018</p>
-                                                <span>roadthemes</span>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="comment_title">
-                                        <h2>Add a review </h2>
-                                        <p>Your email address will not be published.  Required fields are marked </p>
-                                    </div>
-                                    <div class="product_ratting mb-10">
-                                       <h3>Your rating</h3>
-                                        <ul class="d-flex">
-                                            <li><a href="#"><i class="icon-star"></i></a></li>
-                                               <li><a href="#"><i class="icon-star"></i></a></li>
-                                               <li><a href="#"><i class="icon-star"></i></a></li>
-                                               <li><a href="#"><i class="icon-star"></i></a></li>
-                                               <li><a href="#"><i class="icon-star"></i></a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="product_review_form">
-                                        <form action="#">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <label for="review_comment">Your review </label>
-                                                    <textarea name="comment" id="review_comment" ></textarea>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6">
-                                                    <label for="author">Name</label>
-                                                    <input id="author"  type="text">
-
-                                                </div>
-                                                <div class="col-lg-6 col-md-6">
-                                                    <label for="email">Email </label>
-                                                    <input id="email"  type="text">
-                                                </div>
-                                            </div>
-                                            <button type="submit">Submit</button>
-                                         </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="tags" role="tabpanel" >
-                                <div class="product_info_content">
-                                    <ul>
-                                        <li>Length: 74cm</li>
-                                        <li>Regular fit</li>
-                                        <li>Notched lapels</li>
-                                        <li>Twin button front fastening</li>
-                                        <li>Front patch pockets; chest pocket</li>
-                                        <li> Internal pockets</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="additional" role="tabpanel" >
-                                <div class="product_d_table">
-                                   <form action="#">
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="first_child">Compositions</td>
-                                                    <td>Polyester</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="first_child">Styles</td>
-                                                    <td>Girly</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="first_child">Properties</td>
-                                                    <td>Short Dress</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </form>
-                                </div>
-                                <div class="product_info_content">
-                                    <p>Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which have since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!</p>
-                                </div>
-                            </div>
-                             <div class="tab-pane fade" id="tabinfo" role="tabpanel" >
-                                <div class="product_d_table">
-                                   <form action="#">
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="first_child">Compositions</td>
-                                                    <td>Polyester</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="first_child">Styles</td>
-                                                    <td>Girly</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="first_child">Properties</td>
-                                                    <td>Short Dress</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </form>
-                                </div>
-                                <div class="product_info_content">
-                                    <p>Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which have since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!</p>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="video" role="tabpanel" >
-                                <div class="product_tab_vidio text-center">
-                                    <iframe width="729" height="410" src="https://www.youtube.com/embed/BUWzX78Ye_8"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    {{$variant->product->description}}
                                 </div>
                             </div>
 

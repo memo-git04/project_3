@@ -29,7 +29,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleFormControlInput1"><b>Base Price: </b> {{ number_format($product->base_price, 2, ',', '.')}} VND</label>
+                                        <label for="exampleFormControlInput1"><b>Base Price: </b>$ {{ number_format($product->base_price, 0, ',', '.')}} VND</label>
                                     </div>
 
                                     <div class="form-group">

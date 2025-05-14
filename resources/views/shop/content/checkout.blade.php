@@ -79,6 +79,7 @@
                                     <tbody>
 {{--                                         @dd(session('cart') )--}}
                                         @foreach($cart as $item)
+
                                             <tr>
                                                 <td>{{ $item['name'] }} ({{ $item['color_name'] }} - {{ $item['size_name'] }})</td>
                                                 <td class="text-right">${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
@@ -98,6 +99,7 @@
                                     </tfoot>
                                 </table>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>

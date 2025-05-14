@@ -5,14 +5,32 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\Product_variant;
 use App\Models\Status;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class HomeAdmincontroller extends Controller
 {
-    public function index(){
-        //get admin dashboard
+    public function index(Request $request){
+        // thống kê số lượng đơn hàng theo trạng thái
+        $orders = Status::withCount('orders')->get();
+
+        $chart = [];
+//        $chart[] = []; // Tiêu đề cột
+        foreach ($orders as $status) {
+            $chart[] = [
+                'label' => $status->status_name,
+                'value' => $status->orders_count,
+            ];
+        }
+        //Thống kê sản phẩm sắp hết hàng
+        $products = Product_variant::with('product', 'color', 'size', 'product.category')
+            ->where('stock_quantity', '<', 20)
+            ->paginate(10);
+
         //get quantity of orders, customers, products
         $data = [
             'productsCount' => \App\Models\Product::count(),
@@ -28,13 +46,55 @@ class HomeAdmincontroller extends Controller
 
         // Chuẩn bị dữ liệu cho biểu đồ
         $chartData = [
-            'labels' => $categories->pluck('category_name'), // Tên danh mục
-            'data' => $categories->pluck('products_count')->toArray()  // Số lượng sản phẩm
+            'labels' => $categories->pluck('category_name'),
+            'data' => $categories->pluck('products_count')->toArray()
         ];
+        //top10 products
+        $year = $request->input('year', Carbon::now()->year);
+        $month = $request->input('month', null);
+
+        $query = DB::table('order_items')
+            ->join('product_variants', 'order_items.product_variant_id', '=', 'product_variants.id')
+            ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->select(
+                'products.id',
+                'products.product_name',
+                DB::raw('SUM(order_items.quantity) as total_quantity'),
+                DB::raw('SUM(order_items.price * order_items.quantity) as total_revenue')
+            )
+            ->groupBy('products.id', 'products.product_name')
+            ->orderByDesc('total_revenue')
+            ->limit(10);
+
+        $query->whereYear('order_items.created_at', $year);
+
+        // Apply month filter if provided
+        if ($month) {
+            $query->whereMonth('order_items.created_at', $month);
+        }
+        // Execute the query
+        $topProducts = $query->get();
+        //get Daily Sales
+        $dailySales = DB::table('order_items')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->select(
+                DB::raw('DATE(orders.order_date) as order_date'),
+                DB::raw('SUM(order_items.quantity) as total_quantity'),
+                DB::raw('SUM(order_items.quantity * order_items.price) as total_revenue')
+            )
+            ->whereDate('orders.order_date', '>=', now()->subDays(7))
+            ->groupBy(DB::raw('DATE(orders.order_date)'))
+            ->orderBy('order_date', 'ASC')
+            ->get();
+//        dd($dailySales);
 //        dd($chartData);
         return view('admin.index',[
             'data' => $data,
             'chartData' => $chartData,
+            'chart' =>$chart,
+            'products' => $products,
+            'topProducts' =>$topProducts,
+            'dailySales' => $dailySales,
         ]);
     }
     public function orderManage(){

@@ -8,7 +8,6 @@
             <div class="row">
                 <div class="col-12">
                     <div class="breadcrumb_content text-center">
-
                         <h3>Shopping Cart</h3>
                     </div>
                 </div>
@@ -56,8 +55,32 @@
                                                 <div class="cart_product_text">
                                                     <h4>{{$item['name']}}</h4>
                                                     <ul>
-                                                        <li><i class="ion-ios-arrow-right"></i> Color : <span>{{$item['color_name']}}</span></li>
-                                                        <li><i class="ion-ios-arrow-right"></i> Size : <span>{{$item['size_name']}}</span></li>
+                                                        <i class="ion-ios-arrow-right"> Color
+                                                            <li>
+                                                                <span>
+                                                                     <select name="color[{{ $item['product_id'] }}]" style="position: relative; z-index: 10;">
+                                                                        @foreach($colors as $color)
+                                                                             <option value="{{ $color->id }}" {{ $item['color_id'] == $color->id ? 'selected' : '' }}>
+                                                                                {{ $color->color_name }}
+                                                                             </option>
+                                                                         @endforeach
+                                                                    </select>
+                                                                </span>
+                                                            </li>
+                                                        </i>
+                                                        <i class="ion-ios-arrow-right"> Size
+                                                            <li>
+                                                            <span>
+                                                                <select name="size[{{ $item['product_id'] }}]" style="position: relative; z-index: 10;">
+                                                                    @foreach($sizes as $size)
+                                                                        <option value="{{ $size->id }}" {{ $item['size_id'] == $size->id ? 'selected' : '' }}>
+                                                                            {{ $size->size_name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </span>
+                                                            </li>
+                                                        </i>
                                                     </ul>
                                                 </div>
                                             </td>

@@ -21,6 +21,8 @@ class Customer extends Model implements \Illuminate\Contracts\Auth\Authenticatab
         'address',
         'password',
         'img',
+        'reset_password',
+        'reset_expire',
         'is_deleted',
     ];
     public $timestamps = true;

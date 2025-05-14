@@ -30,6 +30,16 @@ Route::get('/register', [CustomerController::class, 'register'])
 Route::post('/register', [CustomerController::class, 'registerProcess'])
     ->name('registerProcess');
 
+Route::get('/login/forgot-password', [\App\Http\Controllers\ForgotPasswordController::class, 'showForgotPasswordForm'])
+    ->name('password.request');
+Route::post('/login/forgot-password', [\App\Http\Controllers\ForgotPasswordController::class, 'sendResetPass'])
+    ->name('password.email');
+Route::get('/login/reset-password', [\App\Http\Controllers\ForgotPasswordController::class, 'showResetPasswordForm'])
+    ->name('password.reset');
+Route::post('/login/reset-password', [\App\Http\Controllers\ForgotPasswordController::class, 'verifyPassword'])
+    ->name('password.update');
+
+
 Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])
     ->name('checkout');
 Route::post('/checkout', [\App\Http\Controllers\OrderController::class, 'store'])
@@ -62,15 +72,14 @@ Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
 Route::post('/cart/apply-coupon', [OrderController::class, 'applyCoupon'])->name('cart.apply_coupon');
 Route::get('/add-to-cart/{product}', [\App\Http\Controllers\ProductController::class, 'addToCart'])
     ->name('products.add-to-cart');
+Route::post('/add-to-cart/{product}', [\App\Http\Controllers\ProductController::class, 'addToCartPost'])
+    ->name('products.add-to-cart.post');
 Route::put('/add-to-cart', [\App\Http\Controllers\ProductController::class, 'updateCart'])
     ->name('products.update_cart');
 Route::get('/remove-cart/{product}', [\App\Http\Controllers\ProductController::class, 'removeProduct'])
     ->name('products.remove_a_product');
 Route::get('/remove-cart', [\App\Http\Controllers\ProductController::class, 'deleteAllProducts'])
     ->name('products.remove_cart');
-
-
-
 
 Route::get('/login', [\App\Http\Controllers\AdminController::class, 'login'])->name('login');
 Route::post('/login', [\App\Http\Controllers\AdminController::class, 'loginProcess'])->name('loginProcess');

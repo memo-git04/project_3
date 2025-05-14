@@ -1,13 +1,11 @@
-
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login </title>
+    <title>Reset Password</title>
     <link rel="stylesheet" href="./css1/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <!-- bootstrap links -->
@@ -21,13 +19,13 @@
     <style>
         #button {
             border-radius: 50px 50px 50px 50px;
-            width: 433px;
+            width: 345px;
             height: 50px;
         }
 
         #button1 {
             border-radius: 50px 50px 50px 50px;
-            width: 433px;
+            width: 345px;
             height: 50px;
             margin-bottom: 10px;
         }
@@ -68,46 +66,53 @@
                         <div class="col-lg-6">
                             <div class="p-5">
 
+                                   <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                      </svg>
+                                      <div>
+                                        Email or Password error!
+                                      </div>
+                                    </div>';
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
 
-                                <form class="user" action="{{route('loginCustomerProcess')}}" method="post">
+                                <div class="mb-2 ">
+                                        <span class="text text-danger">
+
+                                        </span>
+                                </div>
+
+                                <form action="{{route('password.update')}}" class="user" method="post">
                                     @csrf
                                     <div id="input1" class="form-group">
-                                        <input type="email" name="email" value=" " class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                                        <label class="control-label">Reset Code</label>
+
+                                        <input type="text" name="code" class="form-control form-control-user" id="exampleInputPassword" placeholder="code">
                                     </div>
 
                                     <div id="input1" class="form-group">
-                                        <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                                        <label class="control-label"> New Password</label>
+
+                                        <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="">
+                                    </div>
+                                    <div id="input1" class="form-group">
+                                        <label class="control-label">Repassword</label>
+
+                                        <input type="password" name="re_password" class="form-control form-control-user" id="exampleInputPassword">
                                     </div>
 
                                     <!-- <button> -->
-                                    <button id="button" name="login" value="login" type="submit" class="btn btn-primary">Login</button>
-
-                                    <hr>
-                                    <button id="button1" name="submit" type="submit" class="btn btn-danger"><i class="fab fa-google fa-fw"></i> Login with Google</button>
-                                    <br>
-                                    <button id="button" name="submit" type="submit" class="btn btn-success"><i class="fab fa-facebook-f fa-fw"></i> Login with Facebook</button>
-                                    <!-- <button> -->
+                                    <button id="button" name="ForgotPassword" value="login" type="submit" class="btn btn-primary">submit</button>
                                 </form>
-                                <hr>
-                                <div class="text-center">
-                                    <a class="small" href="{{route('password.request')}}">Forgot Password?</a>
-                                </div>
-                                <div class="text-center">
-                                    <a class="small" href="{{route('register')}}">Create an Account!</a>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 
